@@ -22,6 +22,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
   properties: {
     dnsPrefix: prefix
     networkProfile: {
+      networkPlugin: 'kubenet'
       serviceCidr: '10.250.0.0/16'
       dnsServiceIP: '10.250.0.10'
       podCidr: '10.240.0.0/16'
