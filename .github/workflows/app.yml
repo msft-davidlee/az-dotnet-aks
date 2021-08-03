@@ -53,14 +53,20 @@ jobs:
           $deploymentName = "aksdeploy" + (Get-Date).ToString("yyyyMMddHHmmss")
           $platformRes = (az resource list --tag stack-name=${{ secrets.NETWORKING_PREFIX }} | ConvertFrom-Json)
           if (!$platformRes){
-            throw "Unable to find Virtual Network resource!"
+            throw "Unable to find eligible Virtual Network resource!"
           }
           $vnet=($platformRes | Where-Object { $_.type -eq "Microsoft.Network/virtualNetworks" -and $_.name.Contains("-pri-") -and $_.resourceGroup.EndsWith("-${{ needs.setup.outputs.build_env }}") })
+          if (!$subnetId){
+            throw "Unable to find Virtual Network resource!"
+          }
           $vnetRg = $vnet.resourceGroup
           $vnetName = $vnet.name
           $location = $vnet.location
           $subnets = (az network vnet subnet list -g $vnetRg --vnet-name $vnetName | ConvertFrom-Json)
           $subnetId = $subnets | Where-Object { $_.name -eq "aks" }
+          if (!$subnetId){
+            throw "Unable to find Subnet resource!"
+          }
           $deployOutputText = (az deployment group create --name $deploymentName --resource-group "${{ secrets.RESOURCE_GROUP }}-${{ needs.setup.outputs.build_env }}" --template-file Deployment/deploy.bicep --parameters `
             location=$location `
             prefix=${{ secrets.PREFIX }} `
