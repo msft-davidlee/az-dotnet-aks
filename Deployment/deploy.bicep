@@ -21,12 +21,11 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
   tags: tags
   properties: {
     dnsPrefix: prefix
+    kubernetesVersion: '1.21.2'
     networkProfile: {
       networkPlugin: 'kubenet'
       serviceCidr: '10.250.0.0/16'
       dnsServiceIP: '10.250.0.10'
-      podCidr: '10.240.0.0/16'
-      dockerBridgeCidr: '172.17.0.1/16'
     }
     agentPoolProfiles: [
       {
