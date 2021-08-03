@@ -73,6 +73,7 @@ jobs:
           if (!$subnetId){
             throw "Unable to find Subnet resource!"
           }
+          Write-Host "Subnet $subnetId"
           $deployOutputText = (az deployment group create --name $deploymentName --resource-group "${{ secrets.RESOURCE_GROUP }}-${{ needs.setup.outputs.build_env }}" --template-file Deployment/deploy.bicep --parameters `
             location=$location `
             prefix=${{ secrets.PREFIX }} `
