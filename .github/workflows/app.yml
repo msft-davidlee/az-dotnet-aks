@@ -52,6 +52,9 @@ jobs:
         run: |
           $deploymentName = "aksdeploy" + (Get-Date).ToString("yyyyMMddHHmmss")
           $platformRes = (az resource list --tag stack-name=${{ secrets.NETWORKING_PREFIX }} | ConvertFrom-Json)
+          if (!$platformRes){
+            throw "Unable to find Virtual Network resource!"
+          }
           $vnet=($platformRes | Where-Object { $_.type -eq "Microsoft.Network/virtualNetworks" -and $_.name.Contains("-pri-") -and $_.resourceGroup.EndsWith("-${{ needs.setup.outputs.build_env }}") })
           $vnetRg = $vnet.resourceGroup
           $vnetName = $vnet.name
@@ -63,7 +66,7 @@ jobs:
             prefix=${{ secrets.PREFIX }} `
             environment=${{ needs.setup.outputs.build_env }} `
             branch=${{ github.ref }} `
-            clientId=${{ github.CLIENT_ID }} `
-            clientSecret=${{ github.CLIENT_SECRET }} `
-            sshPublicKey=${{ github.SSH_PUBLIC_KEY }} `
+            clientId=${{ secrets.CLIENT_ID }} `
+            clientSecret=${{ secrets.CLIENT_SECRET }} `
+            sshPublicKey=${{ secrets.SSH_PUBLIC_KEY }} `
             subnetId=$subnetId)
