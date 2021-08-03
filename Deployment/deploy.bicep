@@ -23,6 +23,9 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
     dnsPrefix: prefix
     networkProfile: {
       serviceCidr: '10.250.0.0/16'
+      dnsServiceIP: '10.250.0.10'
+      podCidr: '10.240.0.0/16'
+      dockerBridgeCidr: '172.17.0.1/16'
     }
     agentPoolProfiles: [
       {
