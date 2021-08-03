@@ -27,6 +27,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
         type: 'VirtualMachineScaleSets'
         mode: 'System'
         osDiskSizeGB: 60
+        count: 1
         minCount: 1
         maxCount: 3
         enableAutoScaling: true
