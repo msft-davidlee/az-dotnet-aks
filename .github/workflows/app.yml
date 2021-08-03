@@ -68,5 +68,5 @@ jobs:
             branch=${{ github.ref }} `
             clientId=${{ secrets.CLIENT_ID }} `
             clientSecret=${{ secrets.CLIENT_SECRET }} `
-            sshPublicKey=${{ secrets.SSH_PUBLIC_KEY }} `
+            sshPublicKey="${{ secrets.SSH_PUBLIC_KEY }}" `
             subnetId=$subnetId)
