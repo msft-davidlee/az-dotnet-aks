@@ -55,6 +55,9 @@ jobs:
           if (!$platformRes){
             throw "Unable to find eligible Virtual Network resource!"
           }
+          if ($platformRes.Length -eq 0){
+            throw "Unable to find 'ANY' eligible Virtual Network resource!"
+          }
           $vnet=($platformRes | Where-Object { $_.type -eq "Microsoft.Network/virtualNetworks" -and $_.name.Contains("-pri-") -and $_.resourceGroup.EndsWith("-${{ needs.setup.outputs.build_env }}") })
           if (!$subnetId){
             throw "Unable to find Virtual Network resource!"
