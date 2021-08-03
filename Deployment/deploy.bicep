@@ -21,6 +21,9 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
   tags: tags
   properties: {
     dnsPrefix: prefix
+    networkProfile: {
+      serviceCidr: '10.250.0.0/16'
+    }
     agentPoolProfiles: [
       {
         name: 'agentpool'
