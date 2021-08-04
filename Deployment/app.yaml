@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: contosoweb
-        image: %AcrName%.azurecr.io/contosoweb:beta1
+        image: %ACR_NAME%.azurecr.io/contosoweb:%VERSION%
         resources:
           requests:
             cpu: 100m

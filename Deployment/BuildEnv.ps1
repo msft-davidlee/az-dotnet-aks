@@ -61,12 +61,13 @@ Push-Location ContosoWeb
 
 # We will be using acr to build out the image.
 # All container names MUST Be lowercase
-
-az acr build --image "contosoweb:beta1" -r $acrName --file ./Dockerfile .
+$version = "beta2"
+az acr build --image "contosoweb:$version" -r $acrName --file ./Dockerfile .
 Pop-Location
 
 $content = Get-Content .\Deployment\app.yaml
-$content = $content.Replace("%AcrName%",$acrName)
+$content = $content.Replace("%ACR_NAME%", $acrName)
+$content = $content.Replace("%VERSION%", $version)
 Set-Content -Path myapp.yaml -Value $content
 
 az aks install-cli
