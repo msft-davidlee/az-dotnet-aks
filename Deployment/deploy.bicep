@@ -8,6 +8,8 @@ param clientId string
 param clientSecret string
 @secure()
 param sshPublicKey string
+param managedUserId string
+param scriptVersion string = utcNow()
 
 var tags = {
   'stack-name': prefix
@@ -58,5 +60,47 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
         ]
       }
     }
+  }
+}
+
+resource acr 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' = {
+  name: prefix
+  location: location
+  tags: tags
+  sku: {
+    name: 'Basic'
+  }
+  properties: {
+    publicNetworkAccess: 'Enabled'
+    anonymousPullEnabled: false
+    policies: {
+      retentionPolicy: {
+        days: 3
+      }
+    }
+  }
+}
+
+resource staticWebsiteSetup 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
+  name: prefix
+  kind: 'AzurePowerShell'
+  location: location
+  tags: tags
+  dependsOn: [
+    acr
+    aks
+  ]
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${subscription().id}/resourceGroups/${resourceGroup().name}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/${managedUserId}': {}
+    }
+  }
+  properties: {
+    forceUpdateTag: scriptVersion
+    azPowerShellVersion: '5.0'
+    retentionInterval: 'P1D'
+    arguments: '-aksName ${prefix} -rgName ${resourceGroup().name} -acrName ${acr.name}'
+    scriptContent: loadTextContent('configureAKS.ps1')
   }
 }

@@ -81,4 +81,5 @@ jobs:
             clientId=${{ secrets.CLIENT_ID }} `
             clientSecret=${{ secrets.CLIENT_SECRET }} `
             sshPublicKey="${{ secrets.SSH_PUBLIC_KEY }}" `
+            managedUserId="${{ secrets.MANAGED_USER_ID }}" `
             subnetId=$subnetId)
