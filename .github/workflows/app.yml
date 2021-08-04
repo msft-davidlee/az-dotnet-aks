@@ -50,36 +50,12 @@ jobs:
       - id: buid-and-deploy
         name: Build Azure environment
         run: |
-          $deploymentName = "aksdeploy" + (Get-Date).ToString("yyyyMMddHHmmss")
-          $platformRes = (az resource list --tag stack-name=${{ secrets.NETWORKING_PREFIX }} | ConvertFrom-Json)
-          if (!$platformRes){
-            throw "Unable to find eligible Virtual Network resource!"
-          }
-          if ($platformRes.Length -eq 0){
-            throw "Unable to find 'ANY' eligible Virtual Network resource!"
-          }
-          $vnet=($platformRes | Where-Object { $_.type -eq "Microsoft.Network/virtualNetworks" -and $_.name.Contains("-pri-") -and $_.resourceGroup.EndsWith("-${{ needs.setup.outputs.build_env }}") })
-          if (!$vnet){
-            throw "Unable to find Virtual Network resource!"
-          }
-          $vnetRg = $vnet.resourceGroup
-          $vnetName = $vnet.name
-          $location = $vnet.location
-          $subnets = (az network vnet subnet list -g $vnetRg --vnet-name $vnetName | ConvertFrom-Json)
-          if (!$subnets){
-            throw "Unable to find eligible Subnets from Virtual Network $vnetName!"
-          }          
-          $subnetId = ($subnets | Where-Object { $_.name -eq "aks" }).id
-          if (!$subnetId){
-            throw "Unable to find Subnet resource!"
-          }
-          $deployOutputText = (az deployment group create --name $deploymentName --resource-group "${{ secrets.RESOURCE_GROUP }}-${{ needs.setup.outputs.build_env }}" --template-file Deployment/deploy.bicep --parameters `
-            location=$location `
-            prefix=${{ secrets.PREFIX }} `
-            environment=${{ needs.setup.outputs.build_env }} `
-            branch=${{ github.ref }} `
-            clientId=${{ secrets.CLIENT_ID }} `
-            clientSecret=${{ secrets.CLIENT_SECRET }} `
-            sshPublicKey="${{ secrets.SSH_PUBLIC_KEY }}" `
-            managedUserId="${{ secrets.MANAGED_USER_ID }}" `
-            subnetId=$subnetId)
+          .\BuildEnv.ps1 -NETWORKING_PREFIX ${{ secrets.NETWORKING_PREFIX }} `
+            -BUILD_ENV ${{ needs.setup.outputs.build_env }} `
+            -RESOURCE_GROUP ${{ secrets.RESOURCE_GROUP }} `
+            -PREFIX ${{ secrets.PREFIX }} `
+            -GITHUB_REF ${{ github.ref }} `
+            -CLIENT_ID ${{ secrets.CLIENT_ID }} `
+            -CLIENT_SECRET ${{ secrets.CLIENT_SECRET }} `
+            -SSH_PUBLIC_KEY ${{ secrets.SSH_PUBLIC_KEY }} `
+            -MANAGED_USER_ID ${{ secrets.MANAGED_USER_ID }}
