@@ -98,7 +98,7 @@ resource staticWebsiteSetup 'Microsoft.Resources/deploymentScripts@2020-10-01' =
   }
   properties: {
     forceUpdateTag: scriptVersion
-    azPowerShellVersion: '5.0'
+    azPowerShellVersion: '6.0'
     retentionInterval: 'P1D'
     arguments: '-aksName ${prefix} -rgName ${resourceGroup().name} -acrName ${acr.name}'
     scriptContent: loadTextContent('configureAKS.ps1')
