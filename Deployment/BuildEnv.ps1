@@ -33,16 +33,19 @@ if (!$subnetId) {
     throw "Unable to find Subnet resource!"
 }
 
-az deployment group create --name $deploymentName --resource-group "$RESOURCE_GROUP-$BUILD_ENV" --template-file Deployment/deploy.bicep --parameters `
-    location=$location `
-    prefix=$PREFIX `
-    environment=$BUILD_ENV `
-    branch=$GITHUB_REF `
-    clientId= $CLIENT_ID `
-    clientSecret=$CLIENT_SECRET `
-    sshPublicKey=$SSH_PUBLIC_KEY `
-    managedUserId=$MANAGED_USER_ID `
-    subnetId=$subnetId
+$deployOutputText = (az deployment group create --name $deploymentName --resource-group "$RESOURCE_GROUP-$BUILD_ENV" --template-file Deployment/deploy.bicep --parameters `
+        location=$location `
+        prefix=$PREFIX `
+        environment=$BUILD_ENV `
+        branch=$GITHUB_REF `
+        clientId= $CLIENT_ID `
+        clientSecret=$CLIENT_SECRET `
+        sshPublicKey=$SSH_PUBLIC_KEY `
+        managedUserId=$MANAGED_USER_ID `
+        subnetId=$subnetId)
+
+$deployOutput = $deployOutputText | ConvertFrom-Json
+$acrName = $deployOutput.properties.outputs.acrName.value
 
 dotnet new webapp -f net5.0 -n ContosoWeb
 Copy-Item .\Deployment\Dockerfile ContosoWeb
@@ -51,5 +54,5 @@ Push-Location ContosoWeb
 # We will be using acr to build out the image.
 # All container names MUST Be lowercase
 
-az acr build --image "contosoweb:beta1" -r ContosoWeb --file ./Dockerfile .
+az acr build --image "contosoweb:beta1" -r $acrName --file ./Dockerfile .
 Pop-Location

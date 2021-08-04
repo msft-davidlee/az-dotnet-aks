@@ -104,3 +104,5 @@ resource staticWebsiteSetup 'Microsoft.Resources/deploymentScripts@2020-10-01' =
     scriptContent: loadTextContent('configureAKS.ps1')
   }
 }
+
+output acrName string = acr.name
