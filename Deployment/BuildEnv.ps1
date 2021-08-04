@@ -35,7 +35,8 @@ if (!$subnetId) {
     throw "Unable to find Subnet resource!"
 }
 
-$deployOutputText = (az deployment group create --name $deploymentName --resource-group "$RESOURCE_GROUP-$BUILD_ENV" --template-file Deployment/deploy.bicep --parameters `
+$rgName = "$RESOURCE_GROUP-$BUILD_ENV"
+$deployOutputText = (az deployment group create --name $deploymentName --resource-group $rgName --template-file Deployment/deploy.bicep --parameters `
         location=$location `
         prefix=$PREFIX `
         environment=$BUILD_ENV `
@@ -63,3 +64,12 @@ Push-Location ContosoWeb
 
 az acr build --image "contosoweb:beta1" -r $acrName --file ./Dockerfile .
 Pop-Location
+
+$content = Get-Content .\Deployment\app.yaml
+$content = $content.Replace("%AcrName%",$acrName)
+Set-Content -Path myapp.yaml -Value $content
+
+az aks install-cli
+az aks get-credentials --resource-group $rgName --name $deployOutput.properties.outputs.aksName.value
+kubectl create namespace contoso
+kubectl apply -f myapp.yaml --namespace contoso
