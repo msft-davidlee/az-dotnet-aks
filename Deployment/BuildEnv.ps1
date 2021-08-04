@@ -42,7 +42,7 @@ $deployOutputText = (az deployment group create --name $deploymentName --resourc
         branch=$GITHUB_REF `
         clientId=$CLIENT_ID `
         clientSecret=$CLIENT_SECRET `
-        sshPublicKey=$SSH_PUBLIC_KEY `
+        sshPublicKey="$SSH_PUBLIC_KEY" `
         managedUserId=$MANAGED_USER_ID `
         subnetId=$subnetId)
 
