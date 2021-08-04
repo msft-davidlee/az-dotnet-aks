@@ -49,6 +49,11 @@ $deployOutputText = (az deployment group create --name $deploymentName --resourc
 $deployOutput = $deployOutputText | ConvertFrom-Json
 $acrName = $deployOutput.properties.outputs.acrName.value
 
+if (!$acrName) {
+    $deployOutputText
+    return
+}
+
 dotnet new webapp -f net5.0 -n ContosoWeb
 Copy-Item .\Deployment\Dockerfile ContosoWeb
 Push-Location ContosoWeb
