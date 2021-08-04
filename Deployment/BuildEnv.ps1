@@ -7,7 +7,8 @@ param(
     [string]$CLIENT_ID,
     [string]$CLIENT_SECRET,
     [string]$SSH_PUBLIC_KEY,
-    [string]$MANAGED_USER_ID)
+    [string]$MANAGED_USER_ID,
+    [string]$RUN_NUMBER)
 
 $ErrorActionPreference = "Stop"
 
@@ -55,14 +56,18 @@ if (!$acrName) {
     return
 }
 
-dotnet new webapp -f net5.0 -n ContosoWeb
-Copy-Item .\Deployment\Dockerfile ContosoWeb
-Push-Location ContosoWeb
+$appName = "ContosoWeb"
+dotnet new webapp -f net5.0 -n $appName
+$content = Get-Content .\Deployment\Dockerfile
+$content = $content.Replace("%WEB_APP_NAME%", $appName)
+Set-Content -Path Deployment\Dockerfile -Value $content
+Push-Location $appName
 
 # We will be using acr to build out the image.
 # All container names MUST Be lowercase
-$version = "beta2"
-az acr build --image "contosoweb:$version" -r $acrName --file ./Dockerfile .
+$version = $RUN_NUMBER
+$imageName = $appName.ToLower() + ":$version"
+az acr build --image $imageName -r $acrName --file ./Dockerfile .
 Pop-Location
 
 $content = Get-Content .\Deployment\app.yaml

@@ -8,4 +8,4 @@ FROM mcr.microsoft.com/dotnet/aspnet as base
 COPY --from=build  /publish /app
 WORKDIR /app
 EXPOSE 80
-CMD ["./ContosoWeb"]
+CMD ["./%WEB_APP_NAME%"]

@@ -58,4 +58,5 @@ jobs:
             -CLIENT_ID ${{ secrets.CLIENT_ID }} `
             -CLIENT_SECRET ${{ secrets.CLIENT_SECRET }} `
             -SSH_PUBLIC_KEY "${{ secrets.SSH_PUBLIC_KEY }}" `
-            -MANAGED_USER_ID ${{ secrets.MANAGED_USER_ID }}
+            -MANAGED_USER_ID ${{ secrets.MANAGED_USER_ID }} `
+            -RUN_NUMBER "${{ github.run_number }}"
