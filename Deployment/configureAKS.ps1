@@ -1,7 +1,7 @@
 param($aksName, $acrName, $rgName)
 
-Install-AzAksKubectl -Version latest
-Import-AzAksCredential -ResourceGroupName $rgName -Name $aksName
+Install-AzAksKubectl -Version latest -Force
+Import-AzAksCredential -ResourceGroupName $rgName -Name $aksName -Force
 
 # Associate ACR with AKS
-Set-AzAksCluster -ResourceGroupName $rgName -Name $aksName -AcrNameToAttach $acrName
+Set-AzAksCluster -ResourceGroupName $rgName -Name $aksName -AcrNameToAttach $acrName -Force
