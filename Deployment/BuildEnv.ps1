@@ -9,6 +9,8 @@ param(
     [string]$SSH_PUBLIC_KEY,
     [string]$MANAGED_USER_ID)
 
+$ErrorActionPreference = "Stop"
+
 $deploymentName = "aksdeploy" + (Get-Date).ToString("yyyyMMddHHmmss")
 $platformRes = (az resource list --tag stack-name=$NETWORKING_PREFIX | ConvertFrom-Json)
 if (!$platformRes) {
