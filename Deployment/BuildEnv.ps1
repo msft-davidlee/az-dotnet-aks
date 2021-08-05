@@ -60,7 +60,7 @@ $appName = "ContosoWeb"
 dotnet new webapp -f net5.0 -n $appName
 $content = Get-Content .\Deployment\Dockerfile
 $content = $content.Replace("%WEB_APP_NAME%", $appName)
-Set-Content -Path Dockerfile -Value $content
+Set-Content -Path ./Dockerfile -Value $content
 Push-Location $appName
 
 # We will be using acr to build out the image.
