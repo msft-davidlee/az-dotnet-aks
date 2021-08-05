@@ -3,7 +3,7 @@ The information contained in this README.md file and any accompanying materials 
 
 
 # Introduction
-This project helps you get started with running simple .NET 5 Web App on AKS. This will create a public load balancer and you can use the public IP to access the website. The image is uploaded to a Basic SKU azure container registery which is then applied via a kubectl command on a token-replaced YAML file. 
+This project helps you get started with running a simple .NET 5 Web App (from webapp template) on AKS. This will create a public load balancer via k8 yaml and you can use the public IP to access the website. The image is uploaded to a Basic SKU azure container registery which is then applied via a kubectl command on a token-replaced YAML file. 
 
 # Get Started
 To create this networking environment in your Azure subscription, please follow the steps below. 
@@ -32,8 +32,16 @@ To create this networking environment in your Azure subscription, please follow 
 Note that the NETWORKING_PREFIX is the networking resources i.e. VNETs created from https://github.com/msft-davidlee/az-internal-network. Please make sure you complete that before starting this project. It is the PREFIX used in that project. 
 
 ## Demo Upgrade
+Use the following command to review the current version.
+
+``` az aks show --name myAKSCluster -g myResourceGroup --query "kubernetesVersion" ```
+
 If you used a lower version such as 1.19.11. You can demo the upgrade capability using the following command 
 
 ``` az aks upgrade --resource-group myResourceGroup --name myAKSCluster --kubernetes-version KUBERNETES_VERSION ```
 
 For more information, see: https://docs.microsoft.com/en-us/azure/aks/upgrade-cluster
+
+For testing during an upgrade, try this PowerShell command.
+
+``` for($i=0;$i -lt 10;$i++){ $code = (Invoke-WebRequest -Uri "http://<Public IP>/").StatusCode; Write-Host "Run #$i Status code:$code"; Start-Sleep 1; } ```
