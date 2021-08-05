@@ -10,6 +10,7 @@ param clientSecret string
 param sshPublicKey string
 param managedUserId string
 param scriptVersion string = utcNow()
+param kubernetesVersion string = '1.21.2'
 
 var stackName = '${prefix}${environment}'
 var tags = {
@@ -24,7 +25,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
   tags: tags
   properties: {
     dnsPrefix: prefix
-    kubernetesVersion: '1.21.2'
+    kubernetesVersion: kubernetesVersion
     networkProfile: {
       networkPlugin: 'kubenet'
       serviceCidr: '10.250.0.0/16'

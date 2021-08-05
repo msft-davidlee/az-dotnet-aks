@@ -17,15 +17,23 @@ To create this networking environment in your Azure subscription, please follow 
 6. Note that the environment suffix of dev or prod will be appened to your resource group but you will have the option to define your own resource prefix.
 
 ## Secrets
-| Name | Value |
+| Name | Comments |
 | --- | --- |
 | AZURE_CREDENTIALS | <pre>{<br/>&nbsp;&nbsp;&nbsp;&nbsp;"clientId": "",<br/>&nbsp;&nbsp;&nbsp;&nbsp;"clientSecret": "", <br/>&nbsp;&nbsp;&nbsp;&nbsp;"subscriptionId": "",<br/>&nbsp;&nbsp;&nbsp;&nbsp;"tenantId": "" <br/>}</pre> |
-| PREFIX | myaks |
-| RESOURCE_GROUP | aks |
+| PREFIX | myaks - or whatever name you would like for all your resources such as AKS, ACR etc |
+| RESOURCE_GROUP | aks - or whatever name you give to the resource group |
 | CLIENT_ID | service principal client id of aks instance |
 | CLIENT_SECRET | service principal client secret of aks instance |
-| NETWORKING_PREFIX | platform |
+| NETWORKING_PREFIX | platform - this is the default used in https://github.com/msft-davidlee/az-internal-network - see more comments below |
 | SSH_PUBLIC_KEY | ssh public key to access the underlying vm instance in the AKS |
-| MANAGED_USER_ID | user id |
+| MANAGED_USER_ID | user id you have assigned as a managed user identity in your resource group |
+| K_VERSION | Use the following command to find out what Kubernetes version is available to use in your region (be sure to change the region accordingly) ``` az aks get-versions --location southcentralus --output table ``` |
 
 Note that the NETWORKING_PREFIX is the networking resources i.e. VNETs created from https://github.com/msft-davidlee/az-internal-network. Please make sure you complete that before starting this project. It is the PREFIX used in that project. 
+
+## Demo Upgrade
+If you used a lower version such as 1.19.11. You can demo the upgrade capability using the following command 
+
+``` az aks upgrade --resource-group myResourceGroup --name myAKSCluster --kubernetes-version KUBERNETES_VERSION ```
+
+For more information, see: https://docs.microsoft.com/en-us/azure/aks/upgrade-cluster

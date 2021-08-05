@@ -8,7 +8,8 @@ param(
     [string]$CLIENT_SECRET,
     [string]$SSH_PUBLIC_KEY,
     [string]$MANAGED_USER_ID,
-    [string]$RUN_NUMBER)
+    [string]$RUN_NUMBER,
+    [string]$K_VERSION)
 
 $ErrorActionPreference = "Stop"
 
@@ -46,7 +47,8 @@ $deployOutputText = (az deployment group create --name $deploymentName --resourc
         clientSecret=$CLIENT_SECRET `
         sshPublicKey="$SSH_PUBLIC_KEY" `
         managedUserId=$MANAGED_USER_ID `
-        subnetId=$subnetId)
+        subnetId=$subnetId `
+        kubernetesVersion=$K_VERSION)
 
 $deployOutput = $deployOutputText | ConvertFrom-Json
 $acrName = $deployOutput.properties.outputs.acrName.value
