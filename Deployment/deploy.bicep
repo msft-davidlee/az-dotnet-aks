@@ -11,14 +11,15 @@ param sshPublicKey string
 param managedUserId string
 param scriptVersion string = utcNow()
 
+var stackName = '${prefix}${environment}'
 var tags = {
-  'stack-name': prefix
+  'stack-name': stackName
   'environment': environment
   'branch': branch
 }
 
 resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
-  name: prefix
+  name: stackName
   location: location
   tags: tags
   properties: {
@@ -64,7 +65,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
 }
 
 resource acr 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' = {
-  name: prefix
+  name: stackName
   location: location
   tags: tags
   sku: {
@@ -82,7 +83,7 @@ resource acr 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' = {
 }
 
 resource staticWebsiteSetup 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
-  name: prefix
+  name: stackName
   kind: 'AzurePowerShell'
   location: location
   tags: tags
