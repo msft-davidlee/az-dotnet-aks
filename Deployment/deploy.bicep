@@ -83,7 +83,7 @@ resource acr 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' = {
   }
 }
 
-resource staticWebsiteSetup 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
+resource customscript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
   name: stackName
   kind: 'AzurePowerShell'
   location: location
