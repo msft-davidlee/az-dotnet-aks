@@ -60,4 +60,5 @@ jobs:
             -SSH_PUBLIC_KEY "${{ secrets.SSH_PUBLIC_KEY }}" `
             -MANAGED_USER_ID ${{ secrets.MANAGED_USER_ID }} `
             -RUN_NUMBER "${{ github.run_number }}" `
-            -K_VERSION ${{ secrets.K_VERSION }}
+            -K_VERSION ${{ secrets.K_VERSION }} `
+            -DEMO_TYPE ${{ secrets.DEMO_TYPE }}

@@ -28,6 +28,7 @@ To create this networking environment in your Azure subscription, please follow 
 | SSH_PUBLIC_KEY | ssh public key to access the underlying vm instance in the AKS |
 | MANAGED_USER_ID | user id you have assigned as a managed user identity in your resource group |
 | K_VERSION | Use the following command to find out what Kubernetes version is available to use in your region (be sure to change the region accordingly) ``` az aks get-versions --location southcentralus --output table ``` |
+| DEMO_TYPE | internal or external |
 
 Note that the NETWORKING_PREFIX is the networking resources i.e. VNETs created from https://github.com/msft-davidlee/az-internal-network. Please make sure you complete that before starting this project. It is the PREFIX used in that project. 
 

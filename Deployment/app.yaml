@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: contosoweb
-        image: %ACR_NAME%.azurecr.io/contosoweb:%VERSION%
+        image: ${ACR_NAME}.azurecr.io/contosoweb:${VERSION}
         resources:
           requests:
             cpu: 100m
@@ -30,7 +30,7 @@ kind: Service
 metadata:
   name: contosoweb
 spec:
-  type: LoadBalancer
+  type: ${LOAD_BALANCER_TYPE}
   ports:
   - port: 80
   selector:

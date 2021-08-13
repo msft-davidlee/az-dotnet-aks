@@ -9,7 +9,8 @@ param(
     [string]$SSH_PUBLIC_KEY,
     [string]$MANAGED_USER_ID,
     [string]$RUN_NUMBER,
-    [string]$K_VERSION)
+    [string]$K_VERSION,
+    [string]$DEMO_TYPE)
 
 $ErrorActionPreference = "Stop"
 
@@ -73,8 +74,17 @@ az acr build --image $imageName -r $acrName --file ./Dockerfile .
 Pop-Location
 
 $content = Get-Content .\Deployment\app.yaml
-$content = $content.Replace("%ACR_NAME%", $acrName)
-$content = $content.Replace("%VERSION%", $version)
+$content = $content.Replace("`${ACR_NAME}", $acrName)
+$content = $content.Replace("`${VERSION}", $version)
+
+if ($DEMO_TYPE -eq "internal") {
+    $content = $content.Replace("`${LOAD_BALANCER_TYPE}", "ClusterIP")
+}
+
+if ($DEMO_TYPE -eq "external") {
+    $content = $content.Replace("`${LOAD_BALANCER_TYPE}", "LoadBalancer")
+}
+
 Set-Content -Path myapp.yaml -Value $content
 
 az aks install-cli
